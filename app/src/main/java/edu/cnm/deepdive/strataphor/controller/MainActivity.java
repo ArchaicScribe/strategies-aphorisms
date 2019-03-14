@@ -7,29 +7,24 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import edu.cnm.deepdive.android.BaseFluentAsyncTask;
 import edu.cnm.deepdive.strataphor.R;
-import edu.cnm.deepdive.strataphor.model.StratAphorDatabase;
 import edu.cnm.deepdive.strataphor.service.RandomSaying;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener,
     OnClickListener {
 
 
-  public static final int FADE_DURATION = 8000;
+  private static final int FADE_DURATION = 8000;
   private TextView pithySaying;
-  private Random rng = new Random();
   private float accel;
   private float accelCurrent;
   private float accelLast;
-  private View answerBackground;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     accelCurrent = SensorManager.GRAVITY_EARTH;
     accelLast = SensorManager.GRAVITY_EARTH;
     pithySaying = findViewById(R.id.pithy_saying); // Now refers to TextView, not FrameLayout.
-    answerBackground = findViewById(R.id.answer_background);
+    View answerBackground = findViewById(R.id.answer_background);
     answerBackground.setOnClickListener(this);
   }
 
@@ -62,9 +57,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
   private void changeAnswer() {
     pithySaying.setText(RandomSaying.getInstance().getRandomSaying().getText());
-    ObjectAnimator colorFade = ObjectAnimator.ofObject(pithySaying, "textColor", new ArgbEvaluator(),
-        ContextCompat.getColor(this, R.color.colorAccent),
-        ContextCompat.getColor(this, R.color.colorPrimaryDark));
+    ObjectAnimator colorFade = ObjectAnimator
+        .ofObject(pithySaying, "textColor", new ArgbEvaluator(),
+            ContextCompat.getColor(this, R.color.colorAccent),
+            ContextCompat.getColor(this, R.color.colorPrimaryDark));
     colorFade.setDuration(FADE_DURATION);
     colorFade.start();
   }
